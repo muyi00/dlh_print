@@ -5,57 +5,17 @@ import com.dlh.open.print.Printer;
 
 public class BaseESC {
     public Port port;
-    public Printer.PrinterType printerType;
-    public int maxDots;//允许打印的大点数
-    public int canvasMaxHeight;//打印机画板最大高度，单位dots.
+    public int maxDots = 384;//允许打印的大点数
+    public int canvasMaxHeight = 100;//打印机画板最大高度，单位dots.
 
-    /*
-     * 构造函数
-     */
-    public BaseESC(Port port, Printer.PrinterType printer_type) {
+    public BaseESC(Port port) {
         if (port == null)
             return;
         this.port = port;
-        printerType = printer_type;
-        switch (printerType) {
-            /***
-             * 纸张宽度58mm，最大点数384，打印正常大小中文16字
-             */
-            case COMM_16:
-                maxDots = 384;
-                canvasMaxHeight = 100;
-                break;
-            /***
-             * 纸张宽度80mm，最大点数576，打印正常大小中文24字
-             */
-            case COMM_24:
-                maxDots = 576;
-                canvasMaxHeight = 200;
-                break;
-            case JQ_VMP02:
-                maxDots = 384;
-                canvasMaxHeight = 100;
-                break;
-            case JQ_VMP02_P:
-                maxDots = 384;
-                canvasMaxHeight = 200;
-                break;
-            case JQ_ULT113x:
-                maxDots = 576;
-                canvasMaxHeight = 120;
-                break;
-            case JQ_JLP351:
-                maxDots = 576;
-                canvasMaxHeight = 250;
-                break;
-            default:
-                maxDots = 576;
-                canvasMaxHeight = 100;
-                break;
-        }
+
     }
 
-    /*
+    /**
      * 设置打印对象的x，y坐标
      */
     public boolean setXY(int x, int y) {
@@ -104,5 +64,4 @@ public class BaseESC {
         byte[] cmd = {0x0D, 0x0A};
         return port.write(cmd);
     }
-
 }

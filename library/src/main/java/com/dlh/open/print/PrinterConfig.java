@@ -1,14 +1,14 @@
-package com.dlh.open.test;
+package com.dlh.open.print;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 public class PrinterConfig {
-    private Context context;
-    private KV kv;
+
+    private final SharedPreferences printer_sp;
 
     public PrinterConfig(Context context) {
-        this.context = context;
-        kv = new KV(context);
+        printer_sp = context.getSharedPreferences("printer_sp", Context.MODE_PRIVATE);
     }
 
 
@@ -18,7 +18,9 @@ public class PrinterConfig {
      * @return
      */
     public String getPrinterAddress() {
-        return kv.getString("printer_address", "DC:1D:30:99:08:77");
+        //"DC:1D:30:99:08:77"
+        //"DC:0D:30:45:59:AB"
+        return printer_sp.getString("printer_address", "DC:0D:30:45:59:AB");
     }
 
     /**
@@ -28,8 +30,7 @@ public class PrinterConfig {
      * @return
      */
     public boolean setPrinterAddress(String address) {
-        kv.put("printer_address", address);
-        return kv.commit();
+        return printer_sp.edit().putString("printer_address", address).commit();
     }
 
 
@@ -39,7 +40,7 @@ public class PrinterConfig {
      * @return
      */
     public int getALineWords() {
-        return kv.getInt("a_line_words", 16);
+        return printer_sp.getInt("a_line_words", 16);
     }
 
     /**
@@ -49,7 +50,6 @@ public class PrinterConfig {
      * @return
      */
     public boolean setALineWords(int words) {
-        kv.put("a_line_words", words);
-        return kv.commit();
+        return printer_sp.edit().putInt("a_line_words", words).commit();
     }
 }

@@ -1,5 +1,6 @@
-package com.dlh.open.test;
+package com.dlh.open.print;
 
+import android.arch.lifecycle.GenericLifecycleObserver;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleOwner;
 import android.bluetooth.BluetoothAdapter;
@@ -8,24 +9,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.dlh.open.print.Printer;
 
 import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
 
-public class BluetoothPrinterConnectionHelper implements IBusiness {
+/**
+ * @desc: 打印机管理器
+ * @author: YJ
+ * @time: 2020/6/22
+ */
+public class PrintManage implements GenericLifecycleObserver {
 
     /***
      * 请求开启蓝牙
      */
     private static final int REQUEST_ENABLE_BLUETOOTH = 668;
-
-    private BaseActivity activity;
+    private AppCompatActivity activity;
     private Context mContext;
     /***
      * 打印机配置工具类
@@ -35,14 +38,13 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
      * 已经配置的设备地址
      */
     private String printerAddress;
-
-    private AsyncTaskService asynTask;
+    private PrinterAsyncTask asynTask;
     private BluetoothDevice mBluetoothDevice;
     private BluetoothAdapter mBluetoothAdapter;
     private OnPrintTaskCallback printTaskCallback;
 
 
-    public BluetoothPrinterConnectionHelper(BaseActivity activity) {
+    public PrintManage(AppCompatActivity activity) {
         this.activity = activity;
         mContext = activity;
         printerConfig = new PrinterConfig(mContext);
@@ -50,26 +52,32 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
         activity.getLifecycle().addObserver(this);
     }
 
-    @Override
-    public void init() {
-
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-
-    }
-
-    @Override
+    /***
+     * 在AppCompatActivity的onActivityResult中
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
             if (resultCode == RESULT_OK) {
-                ToastUtils.showShort("蓝牙已经开启");
+                if (printTaskCallback != null) {
+                    printTaskCallback.hint("蓝牙已开启");
+                }
             }
         }
     }
 
-    private static final String TAG_L = "printer_conn_helper";
+    /***
+     *设置打印任务机回调
+     * @param printTaskCallback
+     */
+    public void setOnPrintTaskCallback(OnPrintTaskCallback printTaskCallback) {
+        this.printTaskCallback = printTaskCallback;
+    }
+
+
+    private static final String TAG_L = "print_manage";
 
     @Override
     public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
@@ -112,6 +120,9 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
 
     private void configBondedDevice() {
         //"没有找到配置的打印机，请配置打印机"
+        if (printTaskCallback != null) {
+            printTaskCallback.configBondedDevice("没有找到配置的打印机，请先配置打印");
+        }
     }
 
     /**
@@ -133,13 +144,14 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
     }
 
     /***
-     *打印初始化
+     *启动打印机任务
      */
-    public void printInit(OnPrintTaskCallback printTaskCallback) {
-        this.printTaskCallback = printTaskCallback;
+    public void startPrinterTask() {
         mBluetoothAdapter = Utils.getDefaultAdapter(mContext);
         if (mBluetoothAdapter == null) {
-            ToastUtils.showShort("设备不支持蓝牙");
+            if (printTaskCallback != null) {
+                printTaskCallback.error("设备不支持蓝牙");
+            }
             return;
         }
 
@@ -168,16 +180,15 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
     }
 
     /***
-     * 打印任务
+     * 执行打印任务
      */
     private void printerTask() {
-        asynTask = new AsyncTaskService(mContext, asyncPrintCallBack)
+        asynTask = new PrinterAsyncTask(mContext, asyncPrintCallBack)
                 .setMaskContent("正在检测打印机")
                 .executeTask();
     }
 
-    @Nullable
-    private final AsyncTaskService.AsyncCallBack asyncPrintCallBack = new AsyncTaskService.AsyncCallBack() {
+    private final PrinterAsyncTask.AsyncCallBack asyncPrintCallBack = new PrinterAsyncTask.AsyncCallBack() {
 
         @Override
         public void postUI(int rsult) {
@@ -186,9 +197,7 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
 
         @Override
         public int asyncProcess() {
-            //读取打印机字数配置
-            //济强打印机
-            jqPrintInit();
+            print();
             return 0;
         }
     };
@@ -199,90 +208,30 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
         @Override
         public void handleMessage(android.os.Message msg) {
             int result = msg.what;
-            String msgContent = "";
-            switch (result) {
-                case -1:
-                    msgContent = "连接打印机失败";
-                    break;
-                case -2:
-                    msgContent = "打印机纸仓盖未关闭";
-
-                    break;
-                case -3:
-                    msgContent = "打印机缺纸";
-
-                    break;
-                case -4:
-                    msgContent = "唤醒打印机失败";
-
-                    break;
-                case -8:
-                    msgContent = "打印出错";
-
-                    break;
-                case 1:
-                    if (asynTask != null) {
-                        asynTask.setMaskContent("打印中...");
-                    }
-                    return;
-                case 8:
-                    msgContent = "打印完毕";
-                    break;
-                default:
-            }
-            if (!TextUtils.isEmpty(msgContent)) {
-                ToastUtils.showShort(msgContent);
+            if (result == -1) {
+                if (printTaskCallback != null) {
+                    printTaskCallback.error("连接失败");
+                }
+            } else if (result == 1) {
+                if (asynTask != null) {
+                    asynTask.setMaskContent("鎵撳嵃涓?..");
+                }
+            } else if (result == 100) {
+                if (printTaskCallback != null) {
+                    printTaskCallback.error("打印完成");
+                }
+            } else {
+                if (printTaskCallback != null) {
+                    printTaskCallback.error("未知错误");
+                }
             }
         }
     };
 
-    //<editor-fold desc="济强打印">
-
-    /**
-     * 获取打印机状态
-     *
-     * @param printer
-     * @return
+    /***
+     * 打印机初始化
      */
-    private boolean getPrintStatus(Printer printer) {
-        int i = 0;
-        for (i = 0; i < 10; i++) {
-            if (!printer.getPrinterState(5000)) {
-                // 超时时间过短也会造成获取状态失败，此超时时间和打印机内容多少有关。
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                }
-                continue;
-            }
-            if (printer.printerInfo.isCoverOpen) {
-                myHandler.obtainMessage(-2).sendToTarget();
-                return false;
-            } else if (printer.printerInfo.isNoPaper) {
-                myHandler.obtainMessage(-3).sendToTarget();
-                return false;
-            }
-            if (!printer.printerInfo.isPrinting) {
-                // 表示打印结束
-                myHandler.obtainMessage(8).sendToTarget();
-                return true;
-            } else {// 否则等待500ms,并继续获取状态
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                }
-            }
-        }
-        if (i == 10) {
-            myHandler.obtainMessage(-8).sendToTarget();
-        }
-        return false;
-    }
-
-    /**
-     * 济强印机
-     */
-    private void jqPrintInit() {
+    private void print() {
         Printer printer = new Printer(mBluetoothAdapter, mBluetoothDevice.getAddress());
         int c = 0;
         boolean bl = false;
@@ -291,11 +240,11 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    myHandler.obtainMessage(-8).sendToTarget();
                     return;
                 }
             }
-            if (printer.open(Printer.PrinterType.COMM_16)) {
+            //五秒内连接打印机
+            if (printer.open()) {
                 bl = true;
                 break;
             }
@@ -306,31 +255,41 @@ public class BluetoothPrinterConnectionHelper implements IBusiness {
             myHandler.obtainMessage(-1).sendToTarget();
             return;
         }
-
         if (!printer.wakeUp()) {
             myHandler.obtainMessage(-4).sendToTarget();
             return;
         }
         myHandler.obtainMessage(1).sendToTarget();
-        PrintBill jqPrintBill = new PrintBill(mContext, printer);
+
         if (printTaskCallback != null) {
-            printTaskCallback.jqPrint(jqPrintBill);
+            printTaskCallback.asyncPrint(printer);
         }
-        getPrintStatus(printer);
         if (printer != null) {
             printer.close();
         }
-        //myHandler.obtainMessage(8).sendToTarget();
+        myHandler.obtainMessage(100).sendToTarget();
     }
-
-    //</editor-fold>
-
 
     public interface OnPrintTaskCallback {
         /***
-         * 济强打印机打印
-         * @param jqPrintBill
+         * 没有找到配置的打印机
          */
-        void jqPrint(PrintBill jqPrintBill);
+        void configBondedDevice(String msg);
+
+        /***
+         * 提示信息
+         */
+        void hint(String msg);
+
+        /***
+         * 错误信息
+         */
+        void error(String er);
+
+        /***
+         * 异步打印
+         * @param printer
+         */
+        void asyncPrint(Printer printer);
     }
 }

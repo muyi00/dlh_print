@@ -1,9 +1,90 @@
 package com.dlh.open.print.esc;
 
 import com.dlh.open.print.Port;
-import com.dlh.open.print.Printer;
 
+/**
+ * @desc: ESC指令
+ * @author: YJ
+ * @time: 2020/6/22
+ */
 public class ESC {
+
+    private byte[] cmd = {0, 0, 0, 0, 0, 0, 0, 0};
+    private Port port;
+    public Text text;
+
+    //    public Image image;
+//    public Graphic graphic;
+//    public Barcode barcode;
+//    public CardReader card_reader;
+    public ESC(Port port) {
+        if (port == null)
+            return;
+        this.port = port;
+        text = new Text(port);
+    }
+
+    public boolean init() {
+        cmd[0] = 0x1B;
+        cmd[1] = 0x40;
+        return port.write(cmd, 0, 2);
+    }
+
+    /*
+     * 唤醒打印机，并初始化
+     */
+    public boolean wakeUp() {
+        if (!port.writeNULL())
+            return false;
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+        }
+        return init();
+    }
+
+    public boolean getState(byte[] ret, int timerout_read) {
+        port.flushReadBuffer();
+        cmd[0] = 0x10;
+        cmd[1] = 0x04;
+        cmd[2] = 0x05;
+        if (!port.write(cmd, 0, 3))
+            return false;
+        if (!port.read(ret, 2, timerout_read))
+            return false;
+        return true;
+    }
+
+    /*
+     * 换行回车
+     */
+    public boolean feedEnter() {
+        byte[] cmd = {0x0D, 0x0A};
+        return port.write(cmd);
+    }
+
+    /*
+     * 走纸几行
+     * 输入参数:
+     * --int lines:几行
+     */
+    public boolean feedLines(int lines) {
+        byte[] cmd = {0x1B, 0x64, 00};
+        cmd[2] = (byte) lines;
+        return port.write(cmd);
+    }
+
+    /*
+     * 走纸几点
+     * 输入参数:
+     * --int dots:多少个点
+     */
+    public boolean feedDots(int dots) {
+        byte[] cmd = {0x1B, 0x4A, 00};
+        cmd[2] = (byte) dots;
+        return port.write(cmd);
+    }
+
 
     public enum CARD_TYPE_MAIN
     {
@@ -92,25 +173,6 @@ public class ESC {
         x64,
     }
 
-    private byte[] cmd ={0,0,0,0,0,0,0,0};
-    private Port port;
-    public Text text;
-    public Image image;
-    public Graphic graphic;
-    public Barcode barcode;
-    public CardReader card_reader;
-    public ESC(Port port, Printer.PrinterType printer_type)
-    {
-        if (port== null)
-            return;
-        this.port = port;
-        text = new Text(port,printer_type);
-        image = new Image(port,printer_type);
-        graphic = new Graphic(port,printer_type);
-        barcode = new Barcode(port,printer_type);
-        card_reader = new CardReader(port,printer_type);
-    }
-
     public static enum IMAGE_MODE
     {
         SINGLE_WIDTH_8_HEIGHT(0x01),        //单倍宽8点高
@@ -135,63 +197,4 @@ public class ESC {
         HEIGHT_WIDTH_DOUBLE	//倍高倍宽
     }
 
-    public boolean init()
-    {
-        cmd[0] = 0x1B;	cmd[1] = 0x40;
-        return port.write(cmd,0,2);
-    }
-
-    /*
-     * 唤醒打印机，并初始化
-     */
-    public boolean wakeUp()
-    {
-        if(!port.writeNULL())
-            return false;
-        try {Thread.sleep(50);} catch (InterruptedException e) {}
-        return init();
-    }
-
-    public boolean getState(byte []ret,int timerout_read)
-    {
-        port.flushReadBuffer();
-        cmd[0] = 0x10;
-        cmd[1] = 0x04;
-        cmd[2] = 0x05;
-        if (!port.write(cmd,0,3))
-            return false;
-        if (!port.read(ret, 2,timerout_read))
-            return false;
-        return true;
-    }
-    /*
-     * 换行回车
-     */
-    public boolean feedEnter()
-    {
-        byte []cmd={0x0D,0x0A};
-        return port.write(cmd);
-    }
-    /*
-     * 走纸几行
-     * 输入参数:
-     * --int lines:几行
-     */
-    public boolean feedLines(int lines)
-    {
-        byte []cmd={0x1B,0x64,00};
-        cmd[2] = (byte)lines;
-        return port.write(cmd);
-    }
-    /*
-     * 走纸几点
-     * 输入参数:
-     * --int dots:多少个点
-     */
-    public boolean feedDots(int dots)
-    {
-        byte []cmd={0x1B,0x4A,00};
-        cmd[2] = (byte)dots;
-        return port.write(cmd);
-    }
 }

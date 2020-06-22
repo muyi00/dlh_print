@@ -1,0 +1,25 @@
+<resources>
+
+    <style name="boxPrinterDialog" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--鏄惁鍘婚櫎杈规-->
+        <item name="android:windowFrame">@null</item>
+        <!--鑳屾櫙棰滆壊鍙婂拰閫忔槑绋嬪害-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--鏄惁娴幇鍦╝ctivity涔嬩笂-->
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--鏄惁妯＄硦-->
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowAnimationStyle">@style/AnimPrinterDialog</item>
+        <!--是否去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <style name="AnimPrinterDialog" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/printer_push_top_in</item>
+        <item name="android:windowExitAnimation">@anim/printer_push_top_out</item>
+    </style>
+</resources>

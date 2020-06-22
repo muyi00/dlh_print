@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.dlh.open.print.PrintManage;
+import com.dlh.open.print.Printer;
 
 
 public class MainActivity extends BaseActivity {
@@ -23,6 +25,29 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        printManage.setOnPrintTaskCallback(new PrintManage.OnPrintTaskCallback() {
+            @Override
+            public void configBondedDevice(String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void hint(String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void error(String er) {
+                ToastUtils.showShort(er);
+
+            }
+
+            @Override
+            public void asyncPrint(Printer printer) {
+                PrintBill printBill= new PrintBill(MainActivity.this, printer);
+                printBill.printTest();
+            }
+        });
     }
 
     @Override
@@ -32,6 +57,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void print() {
-        printManage.bluetoothPrintTest();
+        printManage.startPrinterTask();
     }
 }

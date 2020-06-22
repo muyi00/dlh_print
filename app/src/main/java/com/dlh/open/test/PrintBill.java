@@ -3,6 +3,7 @@ package com.dlh.open.test;
 import android.content.Context;
 
 import com.dlh.open.print.Printer;
+import com.dlh.open.print.PrinterConfig;
 import com.dlh.open.print.esc.ESC;
 
 import java.text.SimpleDateFormat;
@@ -10,10 +11,9 @@ import java.text.SimpleDateFormat;
 
 public class PrintBill {
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    public Context mContext;
+    private Context mContext;
     private Printer printer;
     private PrinterConfig printerConfig;
-
 
 
     public PrintBill(Context mContext, Printer printer) {
@@ -82,25 +82,25 @@ public class PrintBill {
         printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x24, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "没看错，你选的就是我！");
         printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x24, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, printerConfig.getPrinterAddress());
 
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x16, false, ESC.TEXT_ENLARGE.NORMAL, "多");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x16, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "多");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x16, false, ESC.TEXT_ENLARGE.WIDTH_DOUBLE, "多");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x16, false, ESC.TEXT_ENLARGE.HEIGHT_WIDTH_DOUBLE, "多");
-
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.NORMAL, "立");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "立");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.WIDTH_DOUBLE, "立");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.HEIGHT_WIDTH_DOUBLE, "立");
-
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x48, false, ESC.TEXT_ENLARGE.NORMAL, "恒");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x48, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "恒");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x48, false, ESC.TEXT_ENLARGE.WIDTH_DOUBLE, "恒");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x48, false, ESC.TEXT_ENLARGE.HEIGHT_WIDTH_DOUBLE, "恒");
-
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x64, false, ESC.TEXT_ENLARGE.NORMAL, "恒");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x64, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "恒");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x64, false, ESC.TEXT_ENLARGE.WIDTH_DOUBLE, "恒");
-        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x64, false, ESC.TEXT_ENLARGE.HEIGHT_WIDTH_DOUBLE, "恒");
+        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.NORMAL, "多立恒");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x16, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "多");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x16, false, ESC.TEXT_ENLARGE.WIDTH_DOUBLE, "多");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x16, false, ESC.TEXT_ENLARGE.HEIGHT_WIDTH_DOUBLE, "多");
+//
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.NORMAL, "立");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "立");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.WIDTH_DOUBLE, "立");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x32, false, ESC.TEXT_ENLARGE.HEIGHT_WIDTH_DOUBLE, "立");
+//
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x48, false, ESC.TEXT_ENLARGE.NORMAL, "恒");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x48, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "恒");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x48, false, ESC.TEXT_ENLARGE.WIDTH_DOUBLE, "恒");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x48, false, ESC.TEXT_ENLARGE.HEIGHT_WIDTH_DOUBLE, "恒");
+//
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x64, false, ESC.TEXT_ENLARGE.NORMAL, "恒");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x64, false, ESC.TEXT_ENLARGE.HEIGHT_DOUBLE, "恒");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x64, false, ESC.TEXT_ENLARGE.WIDTH_DOUBLE, "恒");
+//        printer.esc.text.printOut(Printer.AlignType.CENTER, ESC.FONT_HEIGHT.x64, false, ESC.TEXT_ENLARGE.HEIGHT_WIDTH_DOUBLE, "恒");
 
         printer.esc.feedEnter();
         printer.esc.feedEnter();

@@ -1,16 +1,15 @@
 package com.dlh.open.print.esc;
 
-import android.util.Log;
-
 import com.dlh.open.print.Port;
 import com.dlh.open.print.Printer;
 
 /**
- * @desc: 打印文字
+ * @desc: ECS指令打印文字
  * @author: YJ
- * @time: 2020/6/19
+ * @time: 2020/6/22
  */
 public class Text extends BaseESC {
+
 
     /**
      * 枚举类型：字体ID
@@ -36,13 +35,8 @@ public class Text extends BaseESC {
         }
     }
 
-    /***
-     * 构造函数
-     * @param port
-     * @param printerType
-     */
-    public Text(Port port, Printer.PrinterType printerType) {
-        super(port, printerType);
+    public Text(Port port) {
+        super(port);
     }
 
     /**
@@ -69,10 +63,10 @@ public class Text extends BaseESC {
             case ASCII_32x64:
             case GBK_32x32:
             case GB2312_48x48:
-                if (printerType == Printer.PrinterType.JQ_VMP02 || printerType == Printer.PrinterType.JQ_ULT113x) {
-                    Log.e("JQ", "not support FONT_ID:" + id);
-                    return true;
-                }
+//                if (printerType == Printer.PrinterType.JQ_VMP02 || printerType == Printer.PrinterType.JQ_ULT113x) {
+//                    Log.e("JQ", "not support FONT_ID:" + id);
+//                    return true;
+//                }
                 break;
             default:
                 break;
@@ -313,6 +307,7 @@ public class Text extends BaseESC {
         if (!setFontHeight(ESC.FONT_HEIGHT.x24)) return false;
         if (bold) if (!setBold(false)) return false;
         if (!setFontEnlarge(ESC.TEXT_ENLARGE.NORMAL)) return false;
+
         return true;
     }
 
@@ -321,4 +316,5 @@ public class Text extends BaseESC {
             return false;
         return enter();
     }
+
 }

@@ -19,8 +19,9 @@ import java.util.UUID;
  */
 public class Port {
 
-    public static enum PortState
-    {
+    private static final String TAG = "Printer";
+
+    public static enum PortState {
         /***
          * 端口打开
          */
@@ -59,9 +60,6 @@ public class Port {
          */
         BT_GET_IN_STREAM_ERROR,
     }
-
-
-
 
     private UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private byte[] cmd = {0};
@@ -129,7 +127,7 @@ public class Port {
             TmpSock = btDevice.createRfcommSocketToServiceRecord(uuid);
         } catch (Exception ex) {
             TmpSock = null;
-            Log.e("JQ", "createRfcommSocketToServiceRecord exception");
+            Log.e(TAG, "createRfcommSocketToServiceRecord exception");
             isOpen = false;
             portState = PortState.BT_REMOTE_DEVICE_NULL;
             return false;
@@ -140,7 +138,7 @@ public class Port {
             mmBtSocket.connect();
         } catch (Exception ex) {
             ex.printStackTrace();
-            Log.e("JQ", "connect exception");
+            Log.e(TAG, "connect exception");
 
             try {
                 mmBtSocket.close();
@@ -191,7 +189,7 @@ public class Port {
                 break;
             }
             if (SystemClock.elapsedRealtime() - start_time > timeout) {
-                Log.e("JQ", "adapter state on timeout");
+                Log.e(TAG, "adapter state on timeout");
                 return false;
             }
             try {
@@ -206,7 +204,7 @@ public class Port {
             TmpSock = btDevice.createRfcommSocketToServiceRecord(uuid);
         } catch (Exception ex) {
             TmpSock = null;
-            Log.e("JQ", "createRfcommSocketToServiceRecord exception");
+            Log.e(TAG, "createRfcommSocketToServiceRecord exception");
             isOpen = false;
             portState = PortState.BT_REMOTE_DEVICE_NULL;
             return false;
@@ -219,7 +217,7 @@ public class Port {
                 mmBtSocket.connect();
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Log.e("JQ", "connect exception");
+                Log.e(TAG, "connect exception");
 
                 if (SystemClock.elapsedRealtime() - start_time > timeout) {
                     try {
@@ -229,7 +227,7 @@ public class Port {
                         e.printStackTrace();
                     }
                     isOpen = false;
-                    Log.e("JQ", "connet timeout");
+                    Log.e(TAG, "connet timeout");
 
                     portState = PortState.BT_CONNECT_ERROR;
                     return false;
@@ -259,7 +257,7 @@ public class Port {
         }
         isOpen = true;
         portState = PortState.PORT_OPEND;
-        Log.e("JQ", "connect ok");
+        Log.e(TAG, "connect ok");
         return true;
     }
 
@@ -270,7 +268,7 @@ public class Port {
     public boolean close() {
         if (mmBtSocket == null) {
             isOpen = false;
-            Log.e("JQ", "mmBtSocket null");
+            Log.e(TAG, "mmBtSocket null");
             return false;
         }
         if (isOpen) {
@@ -286,7 +284,7 @@ public class Port {
                 mmBtSocket.close(); //SB close会使Socket无效，必须下次使用必须再次createRfcommSocketToServiceRecord来创建
             } catch (Exception ex) {
                 isOpen = false;
-                Log.e("JQ", "close exception");
+                Log.e(TAG, "close exception");
                 return false;
             }
         }
@@ -336,7 +334,7 @@ public class Port {
         if (!isOpen)
             return false;
         if (mmBtSocket == null) {
-            Log.e("JQ", "mmBtSocket null");
+            Log.e(TAG, "mmBtSocket null");
             return false;
         }
         if (mmOutStream == null) {
@@ -416,7 +414,7 @@ public class Port {
         try {
             data = text.getBytes("GBK");
         } catch (UnsupportedEncodingException e) {
-            Log.e("JQ", "Sting getBytes('GBK') failed");
+            Log.e(TAG, "Sting getBytes('GBK') failed");
             return false;
         }
         if (!write(data, 0, data.length))
@@ -454,13 +452,13 @@ public class Port {
                 }
                 cur_time = SystemClock.elapsedRealtime();
                 if (cur_time - start_time > timeout_read) {
-                    Log.e("JQ", "read timeout");
+                    Log.e(TAG, "read timeout");
                     return false;
                 }
                 Thread.sleep(20);
             }
         } catch (Exception ex) {
-            Log.e("JQ", "read exception");
+            Log.e(TAG, "read exception");
             close();
             return false;
         }

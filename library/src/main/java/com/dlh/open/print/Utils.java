@@ -1,4 +1,4 @@
-package com.dlh.open.test;
+package com.dlh.open.print;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
