@@ -18,9 +18,7 @@ public class PrinterConfig {
      * @return
      */
     public String getPrinterAddress() {
-        //"DC:1D:30:99:08:77"
-        //"DC:0D:30:45:59:AB"
-        return printer_sp.getString("printer_address", "DC:0D:30:45:59:AB");
+        return printer_sp.getString("printer_address", "");
     }
 
     /**
