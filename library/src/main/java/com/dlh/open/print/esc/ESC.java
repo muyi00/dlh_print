@@ -1,6 +1,8 @@
 package com.dlh.open.print.esc;
 
 import com.dlh.open.print.Port;
+import com.dlh.open.print.Printer;
+import com.dlh.open.print.PrinterType;
 
 /**
  * @desc: ESC指令
@@ -17,11 +19,11 @@ public class ESC {
 //    public Graphic graphic;
 //    public Barcode barcode;
 //    public CardReader card_reader;
-    public ESC(Port port) {
+    public ESC(Port port, @PrinterType.Type int printerType) {
         if (port == null)
             return;
         this.port = port;
-        text = new Text(port);
+        text = new Text(port, printerType);
     }
 
     public boolean init() {
@@ -30,7 +32,7 @@ public class ESC {
         return port.write(cmd, 0, 2);
     }
 
-    /*
+    /**
      * 唤醒打印机，并初始化
      */
     public boolean wakeUp() {
@@ -55,7 +57,7 @@ public class ESC {
         return true;
     }
 
-    /*
+    /**
      * 换行回车
      */
     public boolean feedEnter() {
@@ -63,7 +65,7 @@ public class ESC {
         return port.write(cmd);
     }
 
-    /*
+    /**
      * 走纸几行
      * 输入参数:
      * --int lines:几行
@@ -74,7 +76,7 @@ public class ESC {
         return port.write(cmd);
     }
 
-    /*
+    /**
      * 走纸几点
      * 输入参数:
      * --int dots:多少个点
@@ -86,86 +88,87 @@ public class ESC {
     }
 
 
-    public enum CARD_TYPE_MAIN
-    {
+    public enum CARD_TYPE_MAIN {
         CDT_AT24Cxx(0x01),
         CDT_SLE44xx(0x11),
         CDT_CPU(0x21);
         private int _value;
-        private CARD_TYPE_MAIN(int type)
-        {
+
+        private CARD_TYPE_MAIN(int type) {
             _value = type;
         }
-        public int value()
-        {
+
+        public int value() {
             return _value;
         }
-    };
+    }
 
-    public static enum BAR_TEXT_POS
-    {
+    public static enum BAR_TEXT_POS {
         NONE,
         TOP,
         BOTTOM,
     }
-    public static enum BAR_TEXT_SIZE
-    {
+
+    public static enum BAR_TEXT_SIZE {
         ASCII_12x24,
         ASCII_8x16,
     }
 
-    public static enum BAR_UNIT
-    {
+    public static enum BAR_UNIT {
         x1(1),
         x2(2),
         x3(3),
         x4(4);
         private int _value;
-        private BAR_UNIT(int dots)
-        {
+
+        private BAR_UNIT(int dots) {
             _value = dots;
         }
-        public int value()
-        {
+
+        public int value() {
             return _value;
         }
     }
-    public static class LINE_POINT
-    {
+
+    public static class LINE_POINT {
         public int startPoint;
         public int endPoint;
-        public LINE_POINT(){};
-        public LINE_POINT(int start_point, int end_point)
-        {
-            startPoint = (short)start_point;
-            endPoint = (short)end_point;
+
+        public LINE_POINT() {
+        }
+
+        ;
+
+        public LINE_POINT(int start_point, int end_point) {
+            startPoint = (short) start_point;
+            endPoint = (short) end_point;
         }
     }
-    /*
+
+    /**
      * 枚举类型：文本放大方式
      */
-    public static enum 	TEXT_ENLARGE
-    {
+    public static enum TEXT_ENLARGE {
         NORMAL(0x00),                        //正常字符
         HEIGHT_DOUBLE(0x01),                 //倍高字符
         WIDTH_DOUBLE(0x10),                  //倍宽字符
-        HEIGHT_WIDTH_DOUBLE (0x11);           //倍高倍宽字符
+        HEIGHT_WIDTH_DOUBLE(0x11);           //倍高倍宽字符
 
         private int _value;
-        private TEXT_ENLARGE(int mode)
-        {
+
+        private TEXT_ENLARGE(int mode) {
             _value = mode;
         }
-        public int value()
-        {
+
+        public int value() {
             return _value;
         }
     }
-    /*
+
+    /**
      * 枚举类型：字体高度
      */
-    public static enum FONT_HEIGHT
-    {
+    public static enum FONT_HEIGHT {
         x24,
         x16,
         x32,
@@ -173,28 +176,27 @@ public class ESC {
         x64,
     }
 
-    public static enum IMAGE_MODE
-    {
+    public static enum IMAGE_MODE {
         SINGLE_WIDTH_8_HEIGHT(0x01),        //单倍宽8点高
         DOUBLE_WIDTH_8_HEIGHT(0x00),        //倍宽8点高
         SINGLE_WIDTH_24_HEIGHT(0x21),       //单倍宽24点高
         DOUBLE_WIDTH_24_HEIGHT(0x20);       //倍宽24点高
         private int _value;
-        private IMAGE_MODE(final int mode)
-        {
+
+        private IMAGE_MODE(final int mode) {
             _value = mode;
         }
-        public int value()
-        {
+
+        public int value() {
             return _value;
         }
     }
-    public static enum IMAGE_ENLARGE
-    {
+
+    public static enum IMAGE_ENLARGE {
         NORMAL,//正常
         HEIGHT_DOUBLE,//倍高
         WIDTH_DOUBLE,//倍宽
-        HEIGHT_WIDTH_DOUBLE	//倍高倍宽
+        HEIGHT_WIDTH_DOUBLE    //倍高倍宽
     }
 
 }

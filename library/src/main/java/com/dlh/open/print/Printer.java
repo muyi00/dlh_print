@@ -6,14 +6,7 @@ import com.dlh.open.print.esc.ESC;
 
 
 public class Printer {
-    /***
-     * 枚举类型：对齐方式
-     */
-    public static enum AlignType {
-        LEFT,
-        CENTER,
-        RIGHT;
-    }
+
 
     private Port port = null;
     public ESC esc = null;
@@ -54,7 +47,7 @@ public class Printer {
      *
      * @return
      */
-    public boolean open() {
+    public boolean open(@PrinterType.Type int printerType) {
         if (!isInit)
             return false;
         if (isOpen)
@@ -62,7 +55,7 @@ public class Printer {
 
         if (!port.open(3000))
             return false;
-        esc = new ESC(port);
+        esc = new ESC(port, printerType);
         isOpen = true;
         return true;
     }
@@ -71,10 +64,10 @@ public class Printer {
      * 打开端口
      * 注意：最好不要将此函数放在Activity的onCreate函数中，因为bluetooth connect时会有定的延时，有时会造成页面显示很慢，而误认为没有点击按钮
      *
-     * @param timeout      超时时间
+     * @param timeout 超时时间
      * @return
      */
-    public boolean open(int timeout) {
+    public boolean open(@PrinterType.Type int printerType, int timeout) {
         if (!isInit)
             return false;
         if (isOpen)
@@ -83,7 +76,7 @@ public class Printer {
         if (!port.open(timeout))
             return false;
 
-        esc = new ESC(port);
+        esc = new ESC(port, printerType);
         isOpen = true;
         return true;
     }
@@ -93,7 +86,7 @@ public class Printer {
      * @param btDeviceString  蓝牙设备地址
      * @return
      */
-    public boolean open(String btDeviceString) {
+    public boolean open( @PrinterType.Type int printerType, String btDeviceString) {
         if (btDeviceString == null)
             return false;
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -104,7 +97,7 @@ public class Printer {
             return false;
         isInit = true;
 
-        return open( 3000);
+        return open(printerType, 3000);
     }
 
     /***
@@ -144,4 +137,14 @@ public class Printer {
         }
         return esc.text.init();
     }
+
+    /***
+     * 枚举类型：对齐方式
+     */
+    public static enum AlignType {
+        LEFT,
+        CENTER,
+        RIGHT;
+    }
+
 }

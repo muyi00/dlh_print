@@ -2,6 +2,7 @@ package com.dlh.open.print.esc;
 
 import com.dlh.open.print.Port;
 import com.dlh.open.print.Printer;
+import com.dlh.open.print.PrinterType;
 
 /**
  * @desc: ECS指令打印文字
@@ -35,8 +36,8 @@ public class Text extends BaseESC {
         }
     }
 
-    public Text(Port port) {
-        super(port);
+    public Text(Port port, @PrinterType.Type int printerType) {
+        super(port, printerType);
     }
 
     /**

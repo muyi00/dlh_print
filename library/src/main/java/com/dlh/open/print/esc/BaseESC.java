@@ -2,17 +2,35 @@ package com.dlh.open.print.esc;
 
 import com.dlh.open.print.Port;
 import com.dlh.open.print.Printer;
+import com.dlh.open.print.PrinterType;
 
 public class BaseESC {
-    public Port port;
-    public int maxDots = 384;//允许打印的大点数
-    public int canvasMaxHeight = 100;//打印机画板最大高度，单位dots.
+    protected Port port;
+    @PrinterType.Type
+    int printerType;
+    protected int maxDots = 384;//允许打印的大点数
+    protected int canvasMaxHeight = 100;//打印机画板最大高度，单位dots.
 
-    public BaseESC(Port port) {
+
+    public BaseESC(Port port, @PrinterType.Type int printerType) {
         if (port == null)
             return;
         this.port = port;
-
+        this.printerType = printerType;
+        switch (printerType) {
+            case PrinterType.PAPER_WIDTH_58_MM:
+                maxDots = 384;
+                canvasMaxHeight = 100;
+                break;
+            case PrinterType.PAPER_WIDTH_80_MM:
+                maxDots = 576;
+                canvasMaxHeight = 100;
+                break;
+            default:
+                maxDots = 384;
+                canvasMaxHeight = 100;
+                break;
+        }
     }
 
     /**

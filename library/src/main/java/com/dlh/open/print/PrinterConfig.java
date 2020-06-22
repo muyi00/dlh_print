@@ -35,21 +35,21 @@ public class PrinterConfig {
 
 
     /**
-     * 获取打印纸一行的字数
+     * 获取打印机类型
      *
      * @return
      */
-    public int getALineWords() {
-        return printer_sp.getInt("a_line_words", 16);
+    public int getPrinterType() {
+        return printer_sp.getInt("printer_type", 0);
     }
 
     /**
-     * 保存打印纸一行的字数
+     * 保存打印机类型
      *
      * @param words
      * @return
      */
-    public boolean setALineWords(int words) {
-        return printer_sp.edit().putInt("a_line_words", words).commit();
+    public boolean setPrinterType(int words) {
+        return printer_sp.edit().putInt("printer_type", words).commit();
     }
 }

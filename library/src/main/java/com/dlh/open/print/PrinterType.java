@@ -11,18 +11,37 @@ import java.lang.annotation.RetentionPolicy;
  * @time: 2020/6/22
  */
 public class PrinterType {
-    /**
-     * 标准文字，一行16字
-     */
-    public static final int COMM_16 = 0;
-    /***
-     *标准文字，一行24字
-     */
-    public static final int COMM_24 = 1;
 
-    @IntDef({COMM_16, COMM_24})
+    /***
+     *纸张宽度58mm；一行打印16个汉字
+     */
+    public static final int PAPER_WIDTH_58_MM = 0;
+    /**
+     * 纸张宽度80mm；一行打印24个汉字
+     */
+    public static final int PAPER_WIDTH_80_MM = 1;
+
+    private static final int SUM_16 = 16;
+    private static final int SUM_24 = 24;
+
+    @IntDef({PAPER_WIDTH_58_MM, PAPER_WIDTH_80_MM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
+    }
+
+    /***
+     * 获取每行可以打印默认字体汉字个数
+     * @param printerType 打印机类型
+     * @return
+     */
+    public static int aLineOfWords(@Type int printerType) {
+        if (printerType == PAPER_WIDTH_58_MM) {
+            return SUM_16;
+        } else if (printerType == PAPER_WIDTH_80_MM) {
+            return SUM_24;
+        } else {
+            return SUM_16;
+        }
     }
 
 }

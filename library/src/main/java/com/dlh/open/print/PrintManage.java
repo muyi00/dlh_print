@@ -42,6 +42,7 @@ public class PrintManage implements GenericLifecycleObserver {
     private BluetoothDevice mBluetoothDevice;
     private BluetoothAdapter mBluetoothAdapter;
     private OnPrintTaskCallback printTaskCallback;
+    private int printerType;
 
 
     public PrintManage(AppCompatActivity activity) {
@@ -49,6 +50,7 @@ public class PrintManage implements GenericLifecycleObserver {
         mContext = activity;
         printerConfig = new PrinterConfig(mContext);
         printerAddress = printerConfig.getPrinterAddress();
+        printerType = printerConfig.getPrinterType();
         activity.getLifecycle().addObserver(this);
     }
 
@@ -244,7 +246,7 @@ public class PrintManage implements GenericLifecycleObserver {
                 }
             }
             //五秒内连接打印机
-            if (printer.open()) {
+            if (printer.open(printerType)) {
                 bl = true;
                 break;
             }
