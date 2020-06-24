@@ -1,5 +1,7 @@
 package com.dlh.open.print;
 
+import android.graphics.Bitmap;
+
 import com.dlh.open.print.enums.AlignType;
 import com.dlh.open.print.enums.BoldType;
 import com.dlh.open.print.enums.Enlarge;
@@ -263,10 +265,10 @@ public class CommPrintUtil {
     }
 
 
-//    public void printBitmap(Bitmap bmp) throws IOException {
-//        byte[] bmpByteArray = PrintUtil.draw2PxPoint(PrintUtil.compressPic(bmp));
-//        printRawBytes(bmpByteArray);
-//    }
+    public void printBitmap(Bitmap bmp) throws IOException {
+        byte[] bmpByteArray = PrintUtil.draw2PxPoint(PrintUtil.compressPic(bmp));
+        printRawBytes(bmpByteArray);
+    }
 
 
 }

@@ -156,7 +156,7 @@ public class PrinterConnectionHelper implements GenericLifecycleObserver {
      */
     public void printInit(OnPrintTaskCallback printTaskCallback) {
         this.printTaskCallback = printTaskCallback;
-        mBluetoothAdapter = Utils.getDefaultAdapter(mContext);
+        mBluetoothAdapter = PrintUtil.getDefaultAdapter(mContext);
         if (mBluetoothAdapter == null) {
             if (printTaskCallback != null) {
                 printTaskCallback.error("设备不支持蓝牙");
