@@ -22,4 +22,7 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.dlh.open.print.test", appContext.getPackageName());
     }
+
+
+
 }

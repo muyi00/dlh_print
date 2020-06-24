@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_bluetooth_is_turned_on">蓝牙已经开启</string>
+    <string name="testing_printer_text">正在检测打印机</string>
+    <string name="automatic_matching">自动匹配</string>
+    <string name="automatically_matching_printers">正在自动匹配打印机...</string>
+    <string name="no_configured_printer_was_found">没有发现配置的打印机，是否自动匹配打印机？</string>
+    <string name="failed_to_connect_the_printer">连接打印机失败</string>
+    <string name="printer_paper_compartment_cover_is_not_closed">打印机纸仓盖未关闭</string>
+    <string name="printer_is_out_of_paper">打印机缺纸</string>
+    <string name="wake_up_the_printer_failed">唤醒打印机失败</string>
+    <string name="print_error">打印出错</string>
+    <string name="printed">打印中...</string>
+    <string name="print_finished">打印完毕</string>
+</resources>

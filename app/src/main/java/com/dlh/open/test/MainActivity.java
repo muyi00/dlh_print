@@ -6,14 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.dlh.open.print.PrintManage;
-import com.dlh.open.print.Printer;
+import com.dlh.open.print.CommPrintUtil;
 import com.dlh.open.print.PrinterConfig;
+import com.dlh.open.print.PrinterConnectionHelper;
 
 
 public class MainActivity extends BaseActivity {
 
-    private PrintManage printManage;
+    private PrinterConnectionHelper connectionHelper;
     private CheckBox cb1, cb2;
     private PrinterConfig printerConfig;
 
@@ -21,7 +21,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        printManage = new PrintManage(this);
+        connectionHelper = new PrinterConnectionHelper(this);
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -29,7 +29,24 @@ public class MainActivity extends BaseActivity {
             }
         });
         printerConfig = new PrinterConfig(this);
-        printManage.setOnPrintTaskCallback(new PrintManage.OnPrintTaskCallback() {
+        cb1 = findViewById(R.id.cb1);
+        cb2 = findViewById(R.id.cb2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        connectionHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void print() {
+        if (cb1.isChecked()) {
+            printerConfig.setPrinterAddress(cb1.getText().toString());
+        }
+        if (cb2.isChecked()) {
+            printerConfig.setPrinterAddress(cb2.getText().toString());
+        }
+        connectionHelper.printInit(new PrinterConnectionHelper.OnPrintTaskCallback() {
             @Override
             public void configBondedDevice(String msg) {
                 ToastUtils.showShort(msg);
@@ -43,32 +60,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void error(String er) {
                 ToastUtils.showShort(er);
-
             }
 
             @Override
-            public void asyncPrint(Printer printer) {
-                PrintBill printBill = new PrintBill(MainActivity.this, printer);
-                printBill.printTest();
+            public void asyncPrint(CommPrintUtil printer, int oneLineOfWords) {
+                CommPrintBill commPrintBill = new CommPrintBill(MainActivity.this, printer, oneLineOfWords);
+                commPrintBill.printTest();
             }
         });
-        cb1 = findViewById(R.id.cb1);
-        cb2 = findViewById(R.id.cb2);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        printManage.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void print() {
-        if(cb1.isChecked()){
-            printerConfig.setPrinterAddress(cb1.getText().toString());
-        }
-        if(cb2.isChecked()){
-            printerConfig.setPrinterAddress(cb2.getText().toString());
-        }
-        printManage.startPrinterTask();
     }
 }

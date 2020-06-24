@@ -50,4 +50,23 @@ public class PrinterConfig {
     public boolean setPrinterType(int words) {
         return printer_sp.edit().putInt("printer_type", words).commit();
     }
+
+    /**
+     * 获取打印纸一行的字数
+     *
+     * @return
+     */
+    public int getALineWords() {
+        return printer_sp.getInt("a_line_words", 16);
+    }
+
+    /**
+     * 保存打印纸一行的字数
+     *
+     * @param words
+     * @return
+     */
+    public boolean setALineWords(int words) {
+        return printer_sp.edit().putInt("a_line_words", words).commit();
+    }
 }
