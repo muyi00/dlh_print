@@ -22,7 +22,7 @@ import java.util.Hashtable;
  * @author: YJ
  * @date: 2019/4/10
  */
-public class PrintUtil {
+public class Utils {
 
 
     public final static int WIDTH_PIXEL = 384;

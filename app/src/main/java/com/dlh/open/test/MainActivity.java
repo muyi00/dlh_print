@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.dlh.open.print.CommPrintUtil;
+import com.dlh.open.print.Print;
 import com.dlh.open.print.PrinterConfig;
 import com.dlh.open.print.PrinterConnectionHelper;
 
@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void asyncPrint(CommPrintUtil printer, int oneLineOfWords) {
+            public void asyncPrint(Print printer, int oneLineOfWords) {
                 CommPrintBill commPrintBill = new CommPrintBill(MainActivity.this, printer, oneLineOfWords);
                 commPrintBill.printTest();
             }

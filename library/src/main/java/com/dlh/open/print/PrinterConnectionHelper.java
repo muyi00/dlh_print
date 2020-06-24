@@ -156,7 +156,7 @@ public class PrinterConnectionHelper implements GenericLifecycleObserver {
      */
     public void printInit(OnPrintTaskCallback printTaskCallback) {
         this.printTaskCallback = printTaskCallback;
-        mBluetoothAdapter = PrintUtil.getDefaultAdapter(mContext);
+        mBluetoothAdapter = Utils.getDefaultAdapter(mContext);
         if (mBluetoothAdapter == null) {
             if (printTaskCallback != null) {
                 printTaskCallback.error("设备不支持蓝牙");
@@ -305,7 +305,7 @@ public class PrinterConnectionHelper implements GenericLifecycleObserver {
         }
         try {
             mSocket = connectDevice(mBluetoothDevice);
-            CommPrintUtil printUtil = new CommPrintUtil(mSocket.getOutputStream(), "GBK");
+            Print printUtil = new Print(mSocket.getOutputStream(), "GBK");
             if (printTaskCallback != null) {
                 printTaskCallback.asyncPrint(printUtil, oneLineOfWords);
             }
@@ -345,6 +345,6 @@ public class PrinterConnectionHelper implements GenericLifecycleObserver {
          * 异步打印
          * @param printer
          */
-        void asyncPrint(CommPrintUtil printer, int oneLineOfWords);
+        void asyncPrint(Print printer, int oneLineOfWords);
     }
 }

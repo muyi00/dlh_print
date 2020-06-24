@@ -3,7 +3,7 @@ package com.dlh.open.test;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 
-import com.dlh.open.print.CommPrintUtil;
+import com.dlh.open.print.Print;
 import com.dlh.open.print.PrinterConfig;
 import com.dlh.open.print.enums.AlignType;
 import com.dlh.open.print.enums.BoldType;
@@ -11,7 +11,6 @@ import com.dlh.open.print.enums.DefaultWords;
 import com.dlh.open.print.enums.Enlarge;
 import com.dlh.open.print.enums.FontSizeType;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
@@ -20,14 +19,14 @@ public class CommPrintBill {
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     public Context mContext;
     private BluetoothSocket socket;
-    private CommPrintUtil printUtil;
+    private Print printUtil;
     private String corpName;
     private PrinterConfig printerConfig;
     private HashMap<Integer, String> csmTypeMap;
     @DefaultWords.Type
     private int oneLineOfWords = DefaultWords.SUM_16;
 
-    public CommPrintBill(Context mContext, CommPrintUtil printUtil, @DefaultWords.Type int oneLineOfWords) {
+    public CommPrintBill(Context mContext, Print printUtil, @DefaultWords.Type int oneLineOfWords) {
         this.mContext = mContext;
         this.oneLineOfWords = oneLineOfWords;
         this.printUtil = printUtil;

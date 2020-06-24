@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-public class CommPrintUtil {
+public class Print {
 
     private OutputStreamWriter mWriter = null;
     private OutputStream mOutputStream = null;
@@ -42,7 +42,7 @@ public class CommPrintUtil {
      * @param encoding 编码
      * @throws IOException
      */
-    public CommPrintUtil(OutputStream outputStream, String encoding) throws IOException {
+    public Print(OutputStream outputStream, String encoding) throws IOException {
         mWriter = new OutputStreamWriter(outputStream, encoding);
         mOutputStream = outputStream;
         initPrinter();
@@ -111,6 +111,7 @@ public class CommPrintUtil {
         }
     }
 
+    //<editor-fold desc="文字相关设置">
 
     /***
      * 对齐
@@ -156,6 +157,7 @@ public class CommPrintUtil {
         mWriter.write(0x45);
         mWriter.write(bold);
     }
+    //</editor-fold>
 
 
     /***
@@ -264,9 +266,13 @@ public class CommPrintUtil {
 
     }
 
-
+    /***
+     * 打印图片
+     * @param bmp
+     * @throws IOException
+     */
     public void printBitmap(Bitmap bmp) throws IOException {
-        byte[] bmpByteArray = PrintUtil.draw2PxPoint(PrintUtil.compressPic(bmp));
+        byte[] bmpByteArray = Utils.draw2PxPoint(Utils.compressPic(bmp));
         printRawBytes(bmpByteArray);
     }
 
