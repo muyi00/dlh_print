@@ -331,6 +331,41 @@ public class PrinterHelper implements GenericLifecycleObserver {
         }
     }
 
+    /***
+     * 是否开启蓝牙
+     * @return
+     */
+    public boolean isEnabledBluetooth() {
+        if (mBluetoothAdapter == null) {
+            if (printTaskCallback != null) {
+                printTaskCallback.error("设备不支持蓝牙");
+            }
+            return false;
+        }
+        return mBluetoothAdapter.isEnabled();
+    }
+
+
+    /***
+     * 开启蓝牙
+     */
+    public void openBluetooth() {
+        if (mBluetoothAdapter == null) {
+            if (printTaskCallback != null) {
+                printTaskCallback.error("设备不支持蓝牙");
+            }
+            return;
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            //蓝牙没有开启，开启蓝牙
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
+        } else {
+            if (printTaskCallback != null) {
+                printTaskCallback.hint(mContext.getString(R.string.app_bluetooth_is_turned_on));
+            }
+        }
+    }
 
     /**
      * 获取已经配对的设备列表
@@ -389,7 +424,6 @@ public class PrinterHelper implements GenericLifecycleObserver {
             configBondedDevice();
         }
     }
-
 
 
     /***
