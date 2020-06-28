@@ -233,7 +233,7 @@ public class Print {
      * @param alignType 对齐方式
      * @param text
      */
-    private void printText(@AlignType.Type int alignType, String text) {
+    public void printText(@AlignType.Type int alignType, String text) {
         printText(alignType, FontSizeType.DEFAULT, BoldType.DEFAULT, text);
     }
 
