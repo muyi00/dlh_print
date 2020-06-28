@@ -159,6 +159,7 @@ public class Print {
     }
     //</editor-fold>
 
+    //<editor-fold desc="打印文字">
 
     /***
      * 打印文字
@@ -227,14 +228,13 @@ public class Print {
         printText(alignType, fontSize, bold, Enlarge.DEFAULT, text);
     }
 
-    /**
-     * 打印文字
-     *
+    /***
+     * 打印文本
+     * @param alignType 对齐方式
      * @param text
-     * @throws IOException
      */
-    public void printText(String text) {
-        printText(AlignType.DEFAULT, FontSizeType.DEFAULT, BoldType.DEFAULT, Enlarge.DEFAULT, text);
+    private void printText(@AlignType.Type int alignType, String text) {
+        printText(alignType, FontSizeType.DEFAULT, BoldType.DEFAULT, text);
     }
 
 
@@ -246,25 +246,23 @@ public class Print {
      * @param text      内容
      */
     public void printText(@AlignType.Type int alignType, @BoldType.Type int bold, String text) {
-        printText(alignType, FontSizeType.DEFAULT, bold, Enlarge.DEFAULT, text);
+        printText(alignType, FontSizeType.DEFAULT, bold, text);
     }
 
-    /***
-     * 打印加粗文字
+
+    /**
+     * 打印文本
+     *
      * @param text
+     * @throws IOException
      */
-    public void printTextBold(String text) {
-        printText(AlignType.DEFAULT, BoldType.BOLD, text);
+    public void printText(String text) {
+        printText(AlignType.DEFAULT, text);
     }
 
-    /***
-     * 打印居中加粗文本
-     * @param text
-     */
-    private void printTextBoldCenter(String text) {
-        printText(AlignType.AT_CENTER, BoldType.BOLD, text);
 
-    }
+    //</editor-fold>
+
 
     /***
      * 打印图片
