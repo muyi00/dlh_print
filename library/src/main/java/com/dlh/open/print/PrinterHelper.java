@@ -19,6 +19,8 @@ import android.util.Log;
 import com.dlh.open.print.enums.DefaultWords;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -136,11 +138,11 @@ public class PrinterHelper implements GenericLifecycleObserver {
     }
 
     /**
-     * 获取已经配对的打印机设备
+     * 获取已配置的设备
      *
      * @return
      */
-    private BluetoothDevice getBondedDevice() {
+    private BluetoothDevice getConfigBondedDevice() {
         //获得已经绑定的蓝牙设备列表
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
@@ -153,42 +155,9 @@ public class PrinterHelper implements GenericLifecycleObserver {
         return null;
     }
 
-    /***
-     *打印初始化
-     */
-    public void printInit(OnPrintTaskCallback printTaskCallback) {
-        this.printTaskCallback = printTaskCallback;
-        mBluetoothAdapter = Utils.getDefaultAdapter(mContext);
-        if (mBluetoothAdapter == null) {
-            if (printTaskCallback != null) {
-                printTaskCallback.error("设备不支持蓝牙");
-            }
-            return;
-        }
 
-        printerAddress = printerConfig.getPrinterAddress();
-        if (TextUtils.isEmpty(printerAddress)) {
-            //没有打印机配对记录，请配对打印机
-            configBondedDevice();
-            return;
-        }
-        if (!mBluetoothAdapter.isEnabled()) {
-            //蓝牙没有开启，开启蓝牙
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
-        } else {
-            //蓝牙已开启,获取已经配对的打印机设备
-            mBluetoothDevice = getBondedDevice();
-        }
 
-        if (mBluetoothDevice != null) {
-            //已经找到了配置的打印机
-            printerTask();
-        } else {
-            //没找到配置的设备
-            configBondedDevice();
-        }
-    }
+
 
     /***
      * 打印任务
@@ -317,6 +286,103 @@ public class PrinterHelper implements GenericLifecycleObserver {
     }
 
     //</editor-fold>
+
+
+    /***
+     * 获取打印机mac地址
+     * @return
+     */
+    public String getPrinterAddress() {
+        return printerConfig.getPrinterAddress();
+    }
+
+    /***
+     * 保存打印机mac地址
+     * @param address
+     * @return
+     */
+    public boolean setPrinterAddress(String address) {
+        return printerConfig.setPrinterAddress(address);
+    }
+
+
+    /***
+     * 初始化
+     */
+    public void init() {
+        mBluetoothAdapter = Utils.getDefaultAdapter(mContext);
+        if (mBluetoothAdapter == null) {
+            if (printTaskCallback != null) {
+                printTaskCallback.error("设备不支持蓝牙");
+            }
+            return;
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            //蓝牙没有开启，开启蓝牙
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
+        }
+    }
+
+
+    /**
+     * 获取已经配对的设备列表
+     *
+     * @return
+     */
+    public List<BluetoothDevice> getBondedDeviceList() {
+        List<BluetoothDevice> list = new ArrayList<>();
+
+        //获得已经绑定的蓝牙设备列表
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                if (device.getAddress().equals(printerAddress)) {
+                    list.add(device);
+                }
+            }
+        }
+        return list;
+    }
+
+
+    /***
+     *打印
+     */
+    public void print() {
+        if (mBluetoothAdapter == null) {
+            if (printTaskCallback != null) {
+                printTaskCallback.error("设备不支持蓝牙");
+            }
+            return;
+        }
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            //蓝牙没有开启，开启蓝牙
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
+        } else {
+            //蓝牙已开启,获取已经配对的打印机设备
+            mBluetoothDevice = getConfigBondedDevice();
+        }
+
+        printerAddress = printerConfig.getPrinterAddress();
+        if (TextUtils.isEmpty(printerAddress)) {
+            //没有打印机配对记录，请配对打印机
+            configBondedDevice();
+            return;
+        }
+
+
+        if (mBluetoothDevice != null) {
+            //已经找到了配置的打印机
+            printerTask();
+        } else {
+            //没找到配置的设备
+            configBondedDevice();
+        }
+    }
+
 
 
     /***
