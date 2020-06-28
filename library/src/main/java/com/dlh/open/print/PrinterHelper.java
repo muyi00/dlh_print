@@ -368,15 +368,10 @@ public class PrinterHelper implements GenericLifecycleObserver {
      */
     public List<BluetoothDevice> getBondedDeviceList() {
         List<BluetoothDevice> list = new ArrayList<>();
-
         //获得已经绑定的蓝牙设备列表
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                if (device.getAddress().equals(printerAddress)) {
-                    list.add(device);
-                }
-            }
+            list.addAll(pairedDevices);
         }
         return list;
     }
