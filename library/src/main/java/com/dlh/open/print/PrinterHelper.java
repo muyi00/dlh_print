@@ -53,7 +53,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
      * 已经配置的设备地址
      */
     private String printerAddress;
-
+    private OnBluetoothConnectCallback bluetoothConnectCallback;
     private OnPrintTaskCallback printTaskCallback;
 
     private BluetoothDevice mBluetoothDevice;
@@ -82,8 +82,8 @@ public class PrinterHelper implements GenericLifecycleObserver {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
             if (resultCode == RESULT_OK) {
-                if (printTaskCallback != null) {
-                    printTaskCallback.hint(mContext.getString(R.string.app_bluetooth_is_turned_on));
+                if (bluetoothConnectCallback != null) {
+                    bluetoothConnectCallback.bluetoothEnabled(mContext.getString(R.string.app_bluetooth_is_turned_on));
                 }
             }
         }
@@ -245,9 +245,15 @@ public class PrinterHelper implements GenericLifecycleObserver {
                     UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
             socket.connect();
         } catch (IOException e) {
+            if (printTaskCallback != null) {
+                printTaskCallback.error("设备连接失败");
+            }
             try {
                 socket.close();
             } catch (IOException closeException) {
+                if (printTaskCallback != null) {
+                    printTaskCallback.error("设备连接失败");
+                }
                 return null;
             }
             return null;
@@ -270,6 +276,9 @@ public class PrinterHelper implements GenericLifecycleObserver {
                 printTaskCallback.asyncPrint(printUtil, oneLineOfWords);
             }
         } catch (Exception e) {
+            if (printTaskCallback != null) {
+                printTaskCallback.error("设备连接失败");
+            }
             e.printStackTrace();
         }
     }
@@ -298,11 +307,12 @@ public class PrinterHelper implements GenericLifecycleObserver {
     /***
      * 初始化
      */
-    public void init() {
+    public void init(OnBluetoothConnectCallback printerConnectCallback) {
+        this.bluetoothConnectCallback = printerConnectCallback;
         mBluetoothAdapter = Utils.getDefaultAdapter(mContext);
         if (mBluetoothAdapter == null) {
-            if (printTaskCallback != null) {
-                printTaskCallback.error("设备不支持蓝牙");
+            if (printerConnectCallback != null) {
+                printerConnectCallback.nonsupport("设备不支持蓝牙");
             }
             return;
         }
@@ -319,8 +329,8 @@ public class PrinterHelper implements GenericLifecycleObserver {
      */
     public boolean isEnabledBluetooth() {
         if (mBluetoothAdapter == null) {
-            if (printTaskCallback != null) {
-                printTaskCallback.error("设备不支持蓝牙");
+            if (bluetoothConnectCallback != null) {
+                bluetoothConnectCallback.nonsupport("设备不支持蓝牙");
             }
             return false;
         }
@@ -333,8 +343,8 @@ public class PrinterHelper implements GenericLifecycleObserver {
      */
     public void openBluetooth() {
         if (mBluetoothAdapter == null) {
-            if (printTaskCallback != null) {
-                printTaskCallback.error("设备不支持蓝牙");
+            if (bluetoothConnectCallback != null) {
+                bluetoothConnectCallback.nonsupport("设备不支持蓝牙");
             }
             return;
         }
@@ -343,8 +353,8 @@ public class PrinterHelper implements GenericLifecycleObserver {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
         } else {
-            if (printTaskCallback != null) {
-                printTaskCallback.hint(mContext.getString(R.string.app_bluetooth_is_turned_on));
+            if (bluetoothConnectCallback != null) {
+                bluetoothConnectCallback.bluetoothEnabled(mContext.getString(R.string.app_bluetooth_is_turned_on));
             }
         }
     }
@@ -390,10 +400,11 @@ public class PrinterHelper implements GenericLifecycleObserver {
     /***
      *打印
      */
-    public void print() {
+    public void print(OnPrintTaskCallback printTaskCallback) {
+        this.printTaskCallback = printTaskCallback;
         if (mBluetoothAdapter == null) {
-            if (printTaskCallback != null) {
-                printTaskCallback.error("设备不支持蓝牙");
+            if (bluetoothConnectCallback != null) {
+                bluetoothConnectCallback.nonsupport("设备不支持蓝牙");
             }
             return;
         }
@@ -414,7 +425,6 @@ public class PrinterHelper implements GenericLifecycleObserver {
             return;
         }
 
-
         if (mBluetoothDevice != null) {
             //已经找到了配置的打印机
             printerTask();
@@ -426,23 +436,28 @@ public class PrinterHelper implements GenericLifecycleObserver {
 
 
     /***
-     *设置打印任务机回调
-     * @param printTaskCallback
+     * 蓝牙连接回调
      */
-    public void setOnPrintTaskCallback(OnPrintTaskCallback printTaskCallback) {
-        this.printTaskCallback = printTaskCallback;
+    public interface OnBluetoothConnectCallback {
+        /***
+         * 设备不支持蓝牙功能
+         */
+        void nonsupport(String msg);
+
+        /***
+         * 蓝牙已打开
+         */
+        void bluetoothEnabled(String msg);
     }
 
+    /****
+     * 打印回调
+     */
     public interface OnPrintTaskCallback {
         /***
          * 没有找到配置的打印机
          */
         void configBondedDevice(String msg);
-
-        /***
-         * 提示信息
-         */
-        void hint(String msg);
 
         /***
          * 错误信息

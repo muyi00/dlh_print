@@ -8,52 +8,56 @@ import android.widget.CheckBox;
 
 import com.dlh.open.print.Print;
 import com.dlh.open.print.PrinterConfig;
-import com.dlh.open.print.PrinterConnectionHelper;
+import com.dlh.open.print.PrinterHelper;
 
 
 public class MainActivity extends BaseActivity {
 
-    private PrinterConnectionHelper connectionHelper;
+    private PrinterHelper printerHelper;
     private CheckBox cb1, cb2;
-    private PrinterConfig printerConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        connectionHelper = new PrinterConnectionHelper(this);
+        printerHelper = new PrinterHelper(this);
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 print();
             }
         });
-        printerConfig = new PrinterConfig(this);
         cb1 = findViewById(R.id.cb1);
         cb2 = findViewById(R.id.cb2);
+        printerHelper.init(new PrinterHelper.OnBluetoothConnectCallback() {
+            @Override
+            public void nonsupport(String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void bluetoothEnabled(String msg) {
+                ToastUtils.showShort(msg);
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        connectionHelper.onActivityResult(requestCode, resultCode, data);
+        printerHelper.onActivityResult(requestCode, resultCode, data);
     }
 
     private void print() {
         if (cb1.isChecked()) {
-            printerConfig.setPrinterAddress(cb1.getText().toString());
+            printerHelper.setPrinterAddress(cb1.getText().toString());
         }
         if (cb2.isChecked()) {
-            printerConfig.setPrinterAddress(cb2.getText().toString());
+            printerHelper.setPrinterAddress(cb2.getText().toString());
         }
-        connectionHelper.printInit(new PrinterConnectionHelper.OnPrintTaskCallback() {
+        printerHelper.print(new PrinterHelper.OnPrintTaskCallback() {
             @Override
             public void configBondedDevice(String msg) {
-                ToastUtils.showShort(msg);
-            }
-
-            @Override
-            public void hint(String msg) {
                 ToastUtils.showShort(msg);
             }
 
@@ -68,5 +72,6 @@ public class MainActivity extends BaseActivity {
                 commPrintBill.printTest();
             }
         });
+
     }
 }
