@@ -273,7 +273,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
             mSocket = connectDevice(mBluetoothDevice);
             Print printUtil = new Print(mSocket.getOutputStream(), "GBK");
             if (printTaskCallback != null) {
-                printTaskCallback.asyncPrint(printUtil, oneLineOfWords);
+                printTaskCallback.asyncPrint(printerAddress, printUtil, oneLineOfWords);
             }
         } catch (Exception e) {
             if (printTaskCallback != null) {
@@ -470,6 +470,6 @@ public class PrinterHelper implements GenericLifecycleObserver {
          * 异步打印
          * @param printer
          */
-        void asyncPrint(Print printer, int oneLineOfWords);
+        void asyncPrint(String printerAddress, Print printer, int oneLineOfWords);
     }
 }
