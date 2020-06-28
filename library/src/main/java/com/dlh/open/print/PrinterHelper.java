@@ -61,6 +61,10 @@ public class PrinterHelper implements GenericLifecycleObserver {
     private BluetoothSocket mSocket = null;
     private PrinterAsyncTask asynTask;
 
+    /***
+     * 构造
+     * @param activity
+     */
     public PrinterHelper(AppCompatActivity activity) {
         this.activity = activity;
         mContext = activity;
@@ -69,6 +73,12 @@ public class PrinterHelper implements GenericLifecycleObserver {
         activity.getLifecycle().addObserver(this);
     }
 
+    /***
+     * Activit 中 onActivityResult
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
             if (resultCode == RESULT_OK) {
@@ -154,9 +164,6 @@ public class PrinterHelper implements GenericLifecycleObserver {
         }
         return null;
     }
-
-
-
 
 
     /***
