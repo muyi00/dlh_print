@@ -147,24 +147,6 @@ public class PrinterHelper implements GenericLifecycleObserver {
         }
     }
 
-    /**
-     * 获取已配置的设备
-     *
-     * @return
-     */
-    private BluetoothDevice getConfigBondedDevice() {
-        //获得已经绑定的蓝牙设备列表
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                if (device.getAddress().equals(printerAddress)) {
-                    return device;
-                }
-            }
-        }
-        return null;
-    }
-
 
     /***
      * 打印任务
@@ -387,6 +369,23 @@ public class PrinterHelper implements GenericLifecycleObserver {
         return list;
     }
 
+    /**
+     * 获取已配置的设备
+     *
+     * @return
+     */
+    public BluetoothDevice getConfigBondedDevice() {
+        //获得已经绑定的蓝牙设备列表
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                if (device.getAddress().equals(printerAddress)) {
+                    return device;
+                }
+            }
+        }
+        return null;
+    }
 
     /***
      *打印
