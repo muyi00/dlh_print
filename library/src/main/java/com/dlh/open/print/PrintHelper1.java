@@ -8,7 +8,12 @@ import com.dlh.open.print.enums.DeviceType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrintHelper {
+/**
+ * @desc: 根据打印机名称前缀判断打印纸宽度
+ * @author: YJ
+ * @time: 2020/6/28
+ */
+public class PrintHelper1 {
 
     //设备类型 ： 蓝牙打印机，打印机一体机
     //打印纸宽度：48mm（16汉字/行 32英文字符/行），72mm（24汉字/行 48英文字符/行）

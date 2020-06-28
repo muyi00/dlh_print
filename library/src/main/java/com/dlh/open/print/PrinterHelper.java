@@ -24,10 +24,12 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
-/***
- * 蓝牙打印连接助手
+/**
+ * @desc: 打印助手
+ * @author: YJ
+ * @time: 2020/6/28
  */
-public class PrinterConnectionHelper implements GenericLifecycleObserver {
+public class PrinterHelper implements GenericLifecycleObserver {
 
     /***
      * 请求开启蓝牙
@@ -57,7 +59,7 @@ public class PrinterConnectionHelper implements GenericLifecycleObserver {
     private BluetoothSocket mSocket = null;
     private PrinterAsyncTask asynTask;
 
-    public PrinterConnectionHelper(AppCompatActivity activity) {
+    public PrinterHelper(AppCompatActivity activity) {
         this.activity = activity;
         mContext = activity;
         printerConfig = new PrinterConfig(mContext);
