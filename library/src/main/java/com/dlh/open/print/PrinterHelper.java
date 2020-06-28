@@ -291,7 +291,8 @@ public class PrinterHelper implements GenericLifecycleObserver {
      * @return
      */
     public String getPrinterAddress() {
-        return printerConfig.getPrinterAddress();
+        printerAddress = printerConfig.getPrinterAddress();
+        return printerAddress;
     }
 
     /***
@@ -300,6 +301,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
      * @return
      */
     public boolean setPrinterAddress(String address) {
+        printerAddress = address;
         return printerConfig.setPrinterAddress(address);
     }
 
