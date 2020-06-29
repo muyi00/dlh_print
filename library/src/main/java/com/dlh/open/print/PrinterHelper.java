@@ -143,7 +143,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
 
     private void configBondedDevice() {
         if (printTaskCallback != null) {
-            printTaskCallback.configBondedDevice("没有找到配置的打印机，请配置打印机");
+            printTaskCallback.configBondedDevice("没有找到配置的打印机，请配置后再打印");
         }
     }
 
