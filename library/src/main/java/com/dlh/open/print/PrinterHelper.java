@@ -16,7 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.dlh.open.print.enums.DefaultWords;
+import com.dlh.open.print.enums.PaperWidthType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,8 +40,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
     /***
      * 打印纸一行可打印中文字数
      */
-    @DefaultWords.Type
-    private int oneLineOfWords = DefaultWords.SUM_16;
+    private int oneLineOfWords;
 
     private AppCompatActivity activity;
     private Context mContext;
@@ -70,6 +69,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
         mContext = activity;
         printerConfig = new PrinterConfig(mContext);
         printerAddress = getPrinterAddress();
+        oneLineOfWords = PaperWidthType.getWords(getPaperWidthType());
         activity.getLifecycle().addObserver(this);
     }
 
@@ -167,22 +167,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
 
         @Override
         public int asyncProcess() {
-            //读取打印机字数配置
-//            PrintDeviceInfo deviceInfo = PrintHelper.getPrintDeviceInfo(mBluetoothDevice.getName());
-//            if (deviceInfo != null) {
-//                oneLineOfWords = deviceInfo.getWordCount();
-//                if (deviceInfo.getDeviceType() == DeviceType.JQ) {
-//                    //济强打印机
-//                    jqPrintInit();
-//                } else {
-//                    //其他打印机
-//                    universalPrintInit();
-//                }
-//            } else {
-//                oneLineOfWords = printerConfig.getALineWords();
             universalPrintInit();
-//            }
-
             return 0;
         }
     };
@@ -272,6 +257,22 @@ public class PrinterHelper implements GenericLifecycleObserver {
         return printerConfig.setPrinterAddress(address);
     }
 
+    /***
+     * 获取打印纸宽度类型
+     * @return
+     */
+    public int getPaperWidthType() {
+        return printerConfig.getPaperWidthType();
+    }
+
+    /***
+     * 设置打印纸宽度类型
+     * @param type
+     * @return
+     */
+    public boolean setPaperWidthType(@PaperWidthType.Type int type) {
+        return printerConfig.setPaperWidthType(type);
+    }
 
     /***
      * 初始化

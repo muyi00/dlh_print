@@ -3,6 +3,8 @@ package com.dlh.open.print;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.dlh.open.print.enums.PaperWidthType;
+
 public class PrinterConfig {
 
     private final SharedPreferences printer_sp;
@@ -33,40 +35,22 @@ public class PrinterConfig {
 
 
     /**
-     * 获取打印机类型
+     * 获取打印纸宽度类型
      *
      * @return
      */
-    public int getPrinterType() {
-        return printer_sp.getInt("printer_type", 0);
+    public int getPaperWidthType() {
+        return printer_sp.getInt("paper_width_type", PaperWidthType.Width_58);
     }
 
     /**
-     * 保存打印机类型
+     * 保存打印纸宽度类型
      *
-     * @param words
+     * @param type
      * @return
      */
-    public boolean setPrinterType(int words) {
-        return printer_sp.edit().putInt("printer_type", words).commit();
+    public boolean setPaperWidthType(@PaperWidthType.Type int type) {
+        return printer_sp.edit().putInt("paper_width_type", type).commit();
     }
 
-    /**
-     * 获取打印纸一行的字数
-     *
-     * @return
-     */
-    public int getALineWords() {
-        return printer_sp.getInt("a_line_words", 16);
-    }
-
-    /**
-     * 保存打印纸一行的字数
-     *
-     * @param words
-     * @return
-     */
-    public boolean setALineWords(int words) {
-        return printer_sp.edit().putInt("a_line_words", words).commit();
-    }
 }
