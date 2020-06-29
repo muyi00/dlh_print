@@ -187,50 +187,24 @@ public class PrinterHelper implements GenericLifecycleObserver {
         }
     };
 
-    private final Handler myHandler = new Handler(Looper.getMainLooper()) {
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
 
         @Override
         public void handleMessage(android.os.Message msg) {
             int result = msg.what;
             String msgContent = "";
             switch (result) {
-                case -1:
+                case 0:
                     msgContent = mContext.getString(R.string.failed_to_connect_the_printer);
 
                     break;
-                case -2:
-                    //"打印机纸仓盖未关闭";
-                    msgContent = mContext.getString(R.string.printer_paper_compartment_cover_is_not_closed);
-
-                    break;
-                case -3:
-                    //"打印机缺纸";
-                    msgContent = mContext.getString(R.string.printer_is_out_of_paper);
-
-                    break;
-                case -4:
-                    //"唤醒打印机失败";
-                    msgContent = mContext.getString(R.string.wake_up_the_printer_failed);
-
-                    break;
-                case -8:
-                    //"打印出错";
-                    msgContent = mContext.getString(R.string.print_error);
-
-                    break;
-                case 1:
-                    if (asynTask != null) {
-                        asynTask.setMaskContent(mContext.getString(R.string.printed));
+                case -1:
+                    if (printTaskCallback != null) {
+                        printTaskCallback.error("设备连接失败");
                     }
-                    return;
-                case 8:
-                    //"打印完毕";
-                    msgContent = mContext.getString(R.string.print_finished);
                     break;
                 default:
-            }
-            if (!TextUtils.isEmpty(msgContent)) {
-                //ToastUtils.showShort(msgContent);
+                    break;
             }
         }
     };
@@ -245,15 +219,11 @@ public class PrinterHelper implements GenericLifecycleObserver {
                     UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
             socket.connect();
         } catch (IOException e) {
-            if (printTaskCallback != null) {
-                printTaskCallback.error("设备连接失败");
-            }
+            handler.obtainMessage(-1).sendToTarget();
             try {
                 socket.close();
             } catch (IOException closeException) {
-                if (printTaskCallback != null) {
-                    printTaskCallback.error("设备连接失败");
-                }
+                handler.obtainMessage(-1).sendToTarget();
                 return null;
             }
             return null;
@@ -276,9 +246,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
                 printTaskCallback.asyncPrint(printerAddress, printUtil, oneLineOfWords);
             }
         } catch (Exception e) {
-            if (printTaskCallback != null) {
-                printTaskCallback.error("设备连接失败");
-            }
+            handler.obtainMessage(-1).sendToTarget();
             e.printStackTrace();
         }
     }
