@@ -69,7 +69,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
         this.activity = activity;
         mContext = activity;
         printerConfig = new PrinterConfig(mContext);
-        printerAddress = printerConfig.getPrinterAddress();
+        printerAddress = getPrinterAddress();
         activity.getLifecycle().addObserver(this);
     }
 
@@ -260,8 +260,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
      * @return
      */
     public String getPrinterAddress() {
-        printerAddress = printerConfig.getPrinterAddress();
-        return printerAddress;
+        return printerConfig.getPrinterAddress();
     }
 
     /***
@@ -270,7 +269,6 @@ public class PrinterHelper implements GenericLifecycleObserver {
      * @return
      */
     public boolean setPrinterAddress(String address) {
-        printerAddress = address;
         return printerConfig.setPrinterAddress(address);
     }
 
@@ -384,7 +382,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
             mBluetoothDevice = getConfigBondedDevice();
         }
 
-        printerAddress = printerConfig.getPrinterAddress();
+        printerAddress = getPrinterAddress();
         if (TextUtils.isEmpty(printerAddress)) {
             //没有打印机配对记录，请配对打印机
             configBondedDevice();
