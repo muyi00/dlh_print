@@ -384,11 +384,11 @@ public class PrinterHelper implements GenericLifecycleObserver {
             //蓝牙没有开启，开启蓝牙
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
+            return;
         } else {
             //蓝牙已开启,获取已经配对的打印机设备
             mBluetoothDevice = getConfigBondedDevice();
         }
-
         printerAddress = getPrinterAddress();
         if (TextUtils.isEmpty(printerAddress)) {
             //没有打印机配对记录，请配对打印机
