@@ -295,6 +295,10 @@ public class PrinterHelper implements GenericLifecycleObserver {
             //蓝牙没有开启，开启蓝牙
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
+        } else {
+            if (bluetoothCallback != null) {
+                bluetoothCallback.bluetoothEnabled(mContext.getString(R.string.app_bluetooth_is_turned_on));
+            }
         }
     }
 
