@@ -385,9 +385,6 @@ public class PrinterHelper implements GenericLifecycleObserver {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH);
             return;
-        } else {
-            //蓝牙已开启,获取已经配对的打印机设备
-            mBluetoothDevice = getConfigBondedDevice();
         }
         printerAddress = getPrinterAddress();
         if (TextUtils.isEmpty(printerAddress)) {
@@ -395,7 +392,8 @@ public class PrinterHelper implements GenericLifecycleObserver {
             configBondedDevice();
             return;
         }
-
+        //蓝牙已开启,获取已经配对的打印机设备
+        mBluetoothDevice = getConfigBondedDevice();
         if (mBluetoothDevice != null) {
             //已经找到了配置的打印机
             printerTask();
