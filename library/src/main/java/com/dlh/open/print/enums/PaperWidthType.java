@@ -30,13 +30,13 @@ public class PaperWidthType {
         int words = 0;
         switch (type) {
             case Width_58:
-                words = 16;
+                words = DefaultWords.SUM_16;
                 break;
             case Width_80:
-                words = 24;
+                words = DefaultWords.SUM_24;
                 break;
             default:
-                words = 16;
+                words = DefaultWords.SUM_16;
                 break;
         }
         return words;
