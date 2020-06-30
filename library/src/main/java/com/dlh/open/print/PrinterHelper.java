@@ -4,6 +4,7 @@ package com.dlh.open.print;
 import androidx.lifecycle.GenericLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -11,11 +12,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.dlh.open.print.enums.DefaultWords;
 import com.dlh.open.print.enums.PaperWidthType;
 
 import java.io.IOException;
@@ -40,6 +44,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
     /***
      * 打印纸一行可打印中文字数
      */
+    @DefaultWords.Type
     private int oneLineOfWords;
 
     private AppCompatActivity activity;
@@ -433,7 +438,7 @@ public class PrinterHelper implements GenericLifecycleObserver {
          * 异步打印
          * @param printer
          */
-        void asyncPrint(String printerAddress, Print printer, int oneLineOfWords);
+        void asyncPrint(String printerAddress, Print printer, @DefaultWords.Type int oneLineOfWords);
 
         /***
          * 打印完成
